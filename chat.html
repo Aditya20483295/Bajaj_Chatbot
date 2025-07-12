@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bajaj Finance Chatbot</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Bajaj Finance Chatbot</h1>
+    <div id="chat-box"></div>
+    <form id="chat-form">
+      <input type="text" id="msg" placeholder="Ask about FY25 reports..." autocomplete="off" required>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+<script>
+  const form = document.getElementById("chat-form");
+  const msgInput = document.getElementById("msg");
+  const chatBox = document.getElementById("chat-box");
+
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = msgInput.value;
+    chatBox.innerHTML += `<div class='user'>🧑 You: ${msg}</div>`;
+    msgInput.value = "";
+
+    const response = await fetch("/get", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: `msg=${encodeURIComponent(msg)}`
+    });
+    const text = await response.text();
+    chatBox.innerHTML += `<div class='bot'>🤖 BajajBot: ${text}</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  };
+</script>
+</body>
+</html>
